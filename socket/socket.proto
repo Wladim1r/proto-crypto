@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package socket;
+option go_package = "crypto.socket;socket";
+
+service SocketService {
+  rpc ReceiveRawMsg(RawMsgRequest) returns (stream RawMsgResponse);
+}
+
+message RawMsgRequest {}
+
+message RawMsgResponse {
+  bytes data = 1; // byte's slice
+}
