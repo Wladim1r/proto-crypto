@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package socket;
+option go_package = "crypto.socket;socket";
+
+service SocketService {
+  rpc ReceiveRawMiniTicker(RawMiniTickerRequest) returns (stream RawMiniTickerResponse);
+  rpc ReceiveRawAggTrade(RawAggTradeRequest) returns (stream RawAggTradeResponse);
+}
+
+message RawAggTradeRequest {
+  string symbol = 1;
+}
+
+message RawMiniTickerResponse {
+  bytes data = 1; // byte's slice
+}
+
+message RawMiniTickerRequest {}
+
+message RawAggTradeResponse {
+  bytes data = 1; // byte's slice
+}
