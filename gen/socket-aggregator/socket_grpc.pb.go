@@ -56,7 +56,7 @@ func (c *socketServiceClient) ReceiveRawMiniTicker(ctx context.Context, in *RawM
 }
 
 type SocketService_ReceiveRawMiniTickerClient interface {
-	Recv() (*RawMiniTickerResponse, error)
+	Recv() (*RawResponse, error)
 	grpc.ClientStream
 }
 
@@ -64,8 +64,8 @@ type socketServiceReceiveRawMiniTickerClient struct {
 	grpc.ClientStream
 }
 
-func (x *socketServiceReceiveRawMiniTickerClient) Recv() (*RawMiniTickerResponse, error) {
-	m := new(RawMiniTickerResponse)
+func (x *socketServiceReceiveRawMiniTickerClient) Recv() (*RawResponse, error) {
+	m := new(RawResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *socketServiceClient) ReceiveRawAggTrade(ctx context.Context, in *RawAgg
 }
 
 type SocketService_ReceiveRawAggTradeClient interface {
-	Recv() (*RawAggTradeResponse, error)
+	Recv() (*RawResponse, error)
 	grpc.ClientStream
 }
 
@@ -97,8 +97,8 @@ type socketServiceReceiveRawAggTradeClient struct {
 	grpc.ClientStream
 }
 
-func (x *socketServiceReceiveRawAggTradeClient) Recv() (*RawAggTradeResponse, error) {
-	m := new(RawAggTradeResponse)
+func (x *socketServiceReceiveRawAggTradeClient) Recv() (*RawResponse, error) {
+	m := new(RawResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ func _SocketService_ReceiveRawMiniTicker_Handler(srv interface{}, stream grpc.Se
 }
 
 type SocketService_ReceiveRawMiniTickerServer interface {
-	Send(*RawMiniTickerResponse) error
+	Send(*RawResponse) error
 	grpc.ServerStream
 }
 
@@ -154,7 +154,7 @@ type socketServiceReceiveRawMiniTickerServer struct {
 	grpc.ServerStream
 }
 
-func (x *socketServiceReceiveRawMiniTickerServer) Send(m *RawMiniTickerResponse) error {
+func (x *socketServiceReceiveRawMiniTickerServer) Send(m *RawResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -167,7 +167,7 @@ func _SocketService_ReceiveRawAggTrade_Handler(srv interface{}, stream grpc.Serv
 }
 
 type SocketService_ReceiveRawAggTradeServer interface {
-	Send(*RawAggTradeResponse) error
+	Send(*RawResponse) error
 	grpc.ServerStream
 }
 
@@ -175,7 +175,7 @@ type socketServiceReceiveRawAggTradeServer struct {
 	grpc.ServerStream
 }
 
-func (x *socketServiceReceiveRawAggTradeServer) Send(m *RawAggTradeResponse) error {
+func (x *socketServiceReceiveRawAggTradeServer) Send(m *RawResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 

@@ -4,20 +4,16 @@ package socket;
 option go_package = "crypto.socket;socket";
 
 service SocketService {
-  rpc ReceiveRawMiniTicker(RawMiniTickerRequest) returns (stream RawMiniTickerResponse);
-  rpc ReceiveRawAggTrade(RawAggTradeRequest) returns (stream RawAggTradeResponse);
+  rpc ReceiveRawMiniTicker(RawMiniTickerRequest) returns (stream RawResponse);
+  rpc ReceiveRawAggTrade(RawAggTradeRequest) returns (stream RawResponse);
 }
 
 message RawAggTradeRequest {
   string symbol = 1;
 }
 
-message RawMiniTickerResponse {
-  bytes data = 1; // byte's slice
-}
-
 message RawMiniTickerRequest {}
 
-message RawAggTradeResponse {
+message RawResponse {
   bytes data = 1; // byte's slice
 }
