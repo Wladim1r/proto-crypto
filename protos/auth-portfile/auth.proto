@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package auth;
+option go_package = "crypto.auth;auth";
+
+service Auth {
+    rpc Register(AuthRequest) returns (AuthResponse);
+    rpc Login(AuthRequest) returns (AuthResponse);
+    rpc Refresh(EmptyRequest) returns (TokenResponse);
+    rpc Logout(EmptyRequest) returns (EmptyResponse);
+}
+
+message AuthRequest {
+    string name = 1;
+    string password = 2;
+}
+message AuthResponse {
+    string status = 1;
+    string error = 2;
+}
+
+message EmptyRequest {}
+
+message EmptyResponse {
+    string status = 1;
+    string error = 2;
+}
+
+message TokenResponse {
+    string access = 1;
+    string refresh = 2;
+    string status = 3;
+    string error = 4;
+}

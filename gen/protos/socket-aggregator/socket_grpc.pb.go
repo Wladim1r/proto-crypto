@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.12
-// source: socket-aggregator/socket.proto
+// source: protos/socket-aggregator/socket.proto
 
 package socket
 
@@ -198,5 +198,5 @@ var SocketService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "socket-aggregator/socket.proto",
+	Metadata: "protos/socket-aggregator/socket.proto",
 }
