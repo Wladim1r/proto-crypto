@@ -4,6 +4,7 @@ package auth
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,7 +22,7 @@ type AuthClient interface {
 	Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Refresh(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*TokenResponse, error)
-	Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 }
 
 type authClient struct {
@@ -59,8 +60,8 @@ func (c *authClient) Refresh(ctx context.Context, in *EmptyRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
-	out := new(EmptyResponse)
+func (c *authClient) Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -75,7 +76,7 @@ type AuthServer interface {
 	Register(context.Context, *AuthRequest) (*AuthResponse, error)
 	Login(context.Context, *AuthRequest) (*AuthResponse, error)
 	Refresh(context.Context, *EmptyRequest) (*TokenResponse, error)
-	Logout(context.Context, *EmptyRequest) (*EmptyResponse, error)
+	Logout(context.Context, *EmptyRequest) (*LoginResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -92,7 +93,7 @@ func (UnimplementedAuthServer) Login(context.Context, *AuthRequest) (*AuthRespon
 func (UnimplementedAuthServer) Refresh(context.Context, *EmptyRequest) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *EmptyRequest) (*EmptyResponse, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *EmptyRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}

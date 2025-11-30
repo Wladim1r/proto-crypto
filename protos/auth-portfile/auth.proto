@@ -7,7 +7,7 @@ service Auth {
     rpc Register(AuthRequest) returns (AuthResponse);
     rpc Login(AuthRequest) returns (AuthResponse);
     rpc Refresh(EmptyRequest) returns (TokenResponse);
-    rpc Logout(EmptyRequest) returns (EmptyResponse);
+    rpc Logout(EmptyRequest) returns (LoginResponse);
 }
 
 message AuthRequest {
@@ -15,20 +15,18 @@ message AuthRequest {
     string password = 2;
 }
 message AuthResponse {
-    int32 status = 1;
-    string error = 2;
+    string status = 1;
 }
 
 message EmptyRequest {}
 
-message EmptyResponse {
-    int32 status = 1;
-    string error = 2;
+message LoginResponse {
+    string status = 1;
 }
 
 message TokenResponse {
     string access = 1;
     string refresh = 2;
-    int32 status = 3;
+    string status = 3;
     string error = 4;
 }
