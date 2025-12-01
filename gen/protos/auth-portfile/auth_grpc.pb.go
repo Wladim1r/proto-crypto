@@ -4,6 +4,7 @@ package auth
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -18,10 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	Refresh(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*TokenResponse, error)
-	Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*Empty, error)
+	Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*TokenResponse, error)
+	Refresh(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TokenResponse, error)
+	Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type authClient struct {
@@ -32,8 +33,8 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
-	out := new(AuthResponse)
+func (c *authClient) Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -41,8 +42,8 @@ func (c *authClient) Register(ctx context.Context, in *AuthRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
-	out := new(AuthResponse)
+func (c *authClient) Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
+	out := new(TokenResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (c *authClient) Login(ctx context.Context, in *AuthRequest, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *authClient) Refresh(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
+func (c *authClient) Refresh(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TokenResponse, error) {
 	out := new(TokenResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Refresh", in, out, opts...)
 	if err != nil {
@@ -59,8 +60,8 @@ func (c *authClient) Refresh(ctx context.Context, in *EmptyRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	out := new(LoginResponse)
+func (c *authClient) Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,10 +73,10 @@ func (c *authClient) Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	Register(context.Context, *AuthRequest) (*AuthResponse, error)
-	Login(context.Context, *AuthRequest) (*AuthResponse, error)
-	Refresh(context.Context, *EmptyRequest) (*TokenResponse, error)
-	Logout(context.Context, *EmptyRequest) (*LoginResponse, error)
+	Register(context.Context, *AuthRequest) (*Empty, error)
+	Login(context.Context, *AuthRequest) (*TokenResponse, error)
+	Refresh(context.Context, *Empty) (*TokenResponse, error)
+	Logout(context.Context, *Empty) (*Empty, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -83,16 +84,16 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) Register(context.Context, *AuthRequest) (*AuthResponse, error) {
+func (UnimplementedAuthServer) Register(context.Context, *AuthRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedAuthServer) Login(context.Context, *AuthRequest) (*AuthResponse, error) {
+func (UnimplementedAuthServer) Login(context.Context, *AuthRequest) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServer) Refresh(context.Context, *EmptyRequest) (*TokenResponse, error) {
+func (UnimplementedAuthServer) Refresh(context.Context, *Empty) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *EmptyRequest) (*LoginResponse, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *Empty) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
@@ -145,7 +146,7 @@ func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 }
 
 func _Auth_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmptyRequest)
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -157,13 +158,13 @@ func _Auth_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/auth.Auth/Refresh",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Refresh(ctx, req.(*EmptyRequest))
+		return srv.(AuthServer).Refresh(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmptyRequest)
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -175,7 +176,7 @@ func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: "/auth.Auth/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Logout(ctx, req.(*EmptyRequest))
+		return srv.(AuthServer).Logout(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

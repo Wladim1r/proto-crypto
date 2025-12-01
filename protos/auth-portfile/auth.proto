@@ -4,28 +4,20 @@ package auth;
 option go_package = "crypto.auth;auth";
 
 service Auth {
-    rpc Register(AuthRequest) returns (AuthResponse);
-    rpc Login(AuthRequest) returns (AuthResponse);
-    rpc Refresh(EmptyRequest) returns (TokenResponse);
-    rpc Logout(EmptyRequest) returns (LoginResponse);
+    rpc Register(AuthRequest) returns (Empty);
+    rpc Login(AuthRequest) returns (TokenResponse);
+    rpc Refresh(Empty) returns (TokenResponse);
+    rpc Logout(Empty) returns (Empty);
 }
 
 message AuthRequest {
     string name = 1;
     string password = 2;
 }
-message AuthResponse {
-    int32 status = 1;
-}
-
-message EmptyRequest {}
-
-message LoginResponse {
-    int32 status = 1;
-}
 
 message TokenResponse {
     string access = 1;
     string refresh = 2;
-    int32 status = 3;
 }
+
+message Empty {}
